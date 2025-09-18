@@ -1,0 +1,17 @@
+name: gcp-service-account
+type: identity
+icon: ./icon.svg
+identity_type: gcp:iam:service_account
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: ./module
+
+inputs:
+  trusted_actions:
+    type: list(string)
+    description: "IAM permissions that this service account can perform (e.g. monitoring.timeSeries.create). Defaults to monitoring and project read access"
+  project_id:
+    type: string
+    description: "GCP project for resource deployment and billing"
+
+outputs:

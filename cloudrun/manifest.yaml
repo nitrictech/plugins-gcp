@@ -1,0 +1,47 @@
+name: gcp-cloudrun
+type: service
+icon: ./icon.svg
+required_identities:
+  - gcp:iam:service_account
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: ./module
+runtime:
+  go_module: github.com/nitrictech/plugins/gcp/cloudrun
+
+inputs:
+  environment:
+    type: map(string)
+    description: "Key-value pairs accessible as environment variables in your container. Defaults to empty"
+  memory_mb:
+    type: number
+    description: "RAM per container instance, affects concurrent request handling. Defaults to 512 MB, accepts 128-32768"
+  cpus:
+    type: number
+    description: "vCPU allocation affecting throughput and concurrent processing. Defaults to 1, accepts 1, 2, 4, or 8"
+  gpus:
+    type: number
+    description: "NVIDIA GPUs for ML/AI workloads, requires specific regions. Defaults to 0"
+  min_instances:
+    type: number
+    description: "Keep instances warm to eliminate cold starts, increases base cost. Defaults to 0"
+  max_instances:
+    type: number
+    description: "Cap scaling to control costs and prevent runaway billing. Defaults to 10"
+  container_concurrency:
+    type: number
+    description: "Simultaneous requests per container before scaling. Defaults to 80, accepts 1-1000"
+  timeout_seconds:
+    type: number
+    description: "Maximum request processing time before Cloud Run returns 504. Defaults to 10 seconds, max 3600"
+  project_id:
+    type: string
+    description: "GCP project for resource deployment and billing"
+  region:
+    type: string
+    description: "Geographic location affecting latency and data residency, e.g. us-central1"
+  container_port:
+    type: number
+    description: "Port your container listens on, typically 8080 for web services. Defaults to 9001"
+
+outputs:
