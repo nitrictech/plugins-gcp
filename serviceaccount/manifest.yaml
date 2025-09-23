@@ -1,5 +1,7 @@
 name: gcp-service-account
+display_name: Service Account
 type: identity
+description: "Creates service accounts for GCP resource authentication"
 icon: ./icon.svg
 identity_type: gcp:iam:service_account
 deployment:
@@ -9,9 +11,9 @@ deployment:
 inputs:
   trusted_actions:
     type: list(string)
-    description: "IAM permissions that this service account can perform (e.g. monitoring.timeSeries.create). Defaults to monitoring and project read access"
+    description: "IAM actions/roles this service account can perform, defining GCP resource access (e.g. `[\"storage.objects.get\", \"storage.objects.create\", \"cloudsql.instances.connect\"]`)"
   project_id:
     type: string
-    description: "GCP project for resource deployment and billing"
+    description: "Google Cloud Project ID (e.g. `my-project-123`)"
 
 outputs:

@@ -1,5 +1,6 @@
 name: gcp-storage-bucket
 type: storage
+description: "Provisions GCS buckets with custom access controls and automatic file upload"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -9,12 +10,12 @@ runtime:
 inputs:
   project_id:
     type: string
-    description: "GCP project for resource deployment and billing"
+    description: "Google Cloud Project ID (e.g. `my-project-123`)"
   region:
     type: string
-    description: "Geographic location affecting latency and data residency, e.g. us-central1"
+    description: "Google Cloud region for storage bucket (e.g. `us-central1`)"
   storage_class:
     type: string
-    description: "Storage performance and pricing tier - STANDARD for frequent access, NEARLINE for monthly, COLDLINE for quarterly, ARCHIVE for annual. Defaults to STANDARD"
+    description: "Performance and durability tier for bucket objects. `STANDARD` for frequent access, `NEARLINE` for monthly access, `COLDLINE` for quarterly access, `ARCHIVE` for annual access (e.g. `STANDARD`)"
 
 outputs:
