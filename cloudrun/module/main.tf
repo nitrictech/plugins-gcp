@@ -81,10 +81,10 @@ resource "random_password" "event_token" {
 resource "google_cloud_run_v2_service" "service" {
   name = replace(var.suga.name, "_", "-")
 
-  location     = var.region
-  project      = var.project_id
-  launch_stage = "GA"
-  ingress      = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  location = var.region
+  project  = var.project_id
+  launch_stage        = "GA"
+  ingress = var.ingress
 
   deletion_protection = false
 
