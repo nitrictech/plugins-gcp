@@ -38,9 +38,11 @@ inputs:
     description: "Maximum request timeout in seconds (e.g. `10`)"
   project_id:
     type: string
+    required: true
     description: "Google Cloud Project ID (e.g. `my-project-123`)"
   region:
     type: string
+    required: true
     description: "Google Cloud region for service deployment (e.g. `us-central1`)"
   container_port:
     type: number
