@@ -25,11 +25,18 @@ variable "region" {
   type        = string
 }
 
-variable "cdn_domain" {
-  description = "The CDN domain configuration."
-  type = object({
-    domain_name = string
-    zone_name   = string
-    domain_ttl  = optional(number, 300)
-  })
+variable "domain_name" {
+  type = string
+  description = "New A records will be created in the hosted zone to establish this domain name for the CDN"
+}
+
+variable "dns_zone_name" {
+  type = string
+  description = "The name of the existing Cloud DNS zone that you would like your domain to be configured in"
+}
+
+variable "domain_ttl" {
+  type = string
+  description = "The time to live (TTL) for the A record created (in seconds). Defaults to 300 seconds"
+  default = 300
 }

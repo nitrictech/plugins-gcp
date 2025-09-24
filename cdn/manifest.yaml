@@ -20,5 +20,16 @@ inputs:
     type: object
     required: true
     description: 'CDN domain configuration (e.g. `{"name": "cdn.example.com", "ssl": true}`)'
+  domain_name:
+    type: string
+    required: true
+    description: "New A records will be created in the hosted zone to establish this domain name for the CDN"
+  dns_zone_name:
+    type: string
+    required: true
+    description: "The name of the existing Cloud DNS zone that you would like your domain to be configured in"
+  domain_ttl:
+    type: number
+    description: "The time to live (TTL) for the A record created (in seconds). Defaults to 300 seconds"
 
 outputs:

@@ -265,7 +265,7 @@ resource "google_compute_url_map" "https_url_map" {
 
 # Lookup the Managed Zone for the CDN Domain
 data "google_dns_managed_zone" "cdn_zone" {
-  name    = var.cdn_domain.zone_name
+  name = var.dns_zone_name
   project = var.project_id
 
   depends_on = [google_project_service.required_services]
@@ -273,21 +273,21 @@ data "google_dns_managed_zone" "cdn_zone" {
 
 # Create DNS Records for the CDN
 resource "google_dns_record_set" "cdn_dns_record" {
-  name         = endswith(var.cdn_domain.domain_name, ".") ? var.cdn_domain.domain_name : "${var.cdn_domain.domain_name}."
+  name         = endswith(var.domain_name, ".") ? var.domain_name : "${var.domain_name}."
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl          = var.cdn_domain.domain_ttl
-  project      = var.project_id
+  ttl = var.domain_ttl
+  project = var.project_id
 }
 
 resource "google_dns_record_set" "www_cdn_dns_record" {
-  name         = endswith(var.cdn_domain.domain_name, ".") ? "www.${var.cdn_domain.domain_name}" : "www.${var.cdn_domain.domain_name}."
+  name         = endswith(var.domain_name, ".") ? "www.${var.domain_name}" : "www.${var.domain_name}."
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl          = var.cdn_domain.domain_ttl
-  project      = var.project_id
+  ttl = var.domain_ttl
+  project = var.project_id
 }
 
 resource "google_certificate_manager_certificate" "cdn_cert" {
@@ -297,7 +297,7 @@ resource "google_certificate_manager_certificate" "cdn_cert" {
   scope       = "DEFAULT"
 
   managed {
-    domains = [var.cdn_domain.domain_name]
+    domains = [var.domain_name]
   }
 
   depends_on = [google_project_service.required_services]
