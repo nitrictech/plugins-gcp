@@ -10,9 +10,11 @@ runtime:
 inputs:
   project_id:
     type: string
+    required: true
     description: "Google Cloud Project ID (e.g. `my-project-123`)"
   region:
     type: string
+    required: true
     description: "Google Cloud region for storage bucket (e.g. `us-central1`)"
   storage_class:
     type: string

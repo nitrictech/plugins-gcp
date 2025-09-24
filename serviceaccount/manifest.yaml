@@ -14,6 +14,7 @@ inputs:
     description: 'IAM actions/roles this service account can perform, defining GCP resource access (e.g. `["storage.objects.get", "storage.objects.create", "cloudsql.instances.connect"]`)'
   project_id:
     type: string
+    required: true
     description: "Google Cloud Project ID (e.g. `my-project-123`)"
 
 outputs:
