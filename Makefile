@@ -23,7 +23,7 @@ validate: ## Validate all Terraform files
 	@echo "Validating..."
 	@find . -name "*.tf" -type f | xargs dirname | sort -u | while read dir; do \
 		echo "  $$dir"; \
-		cd "$$dir" && terraform init -backend=false -get=false -upgrade=false >/dev/null && terraform validate && cd - >/dev/null || exit 1; \
+		cd "$$dir" && terraform init -backend=false -get=true -upgrade=false >/dev/null && terraform validate && cd - >/dev/null || exit 1; \
 	done
 
 lint: ## Lint using tflint
