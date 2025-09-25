@@ -3,8 +3,10 @@ variable "suga" {
     name     = string
     stack_id = string
     origins = map(object({
-      path        = string
-      base_path   = string
+      routes = list(object({
+        path      = string
+        base_path = string
+      }))
       type        = string
       domain_name = string
       id          = string

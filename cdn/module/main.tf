@@ -8,12 +8,28 @@ locals {
     "compute.googleapis.com"
   ]
 
-  root_origins = {
-    for k, v in var.suga.origins : k => v
-    if v.path == "/"
-  }
+  # Flatten origins to create individual path entries
+  origin_paths = flatten([
+    for origin_name, origin in var.suga.origins : [
+      for route in origin.routes : {
+        origin_name = origin_name
+        path        = route.path
+        base_path   = route.base_path
+        type        = origin.type
+        domain_name = origin.domain_name
+        id          = origin.id
+        resources   = origin.resources
+      }
+    ]
+  ])
 
-  default_origin = length(local.root_origins) > 0 ? keys(local.root_origins)[0] : keys(var.suga.origins)[0]
+  # Find default origin (path == "/")
+  default_origin_paths = [
+    for entry in local.origin_paths : entry
+    if entry.path == "/"
+  ]
+
+  default_origin = length(local.default_origin_paths) > 0 ? local.default_origin_paths[0].origin_name : keys(var.suga.origins)[0]
 
   cloud_storage_origins = {
     for k, v in var.suga.origins : k => v
@@ -28,6 +44,22 @@ locals {
   other_origins = {
     for k, v in var.suga.origins : k => v
     if !contains(keys(v.resources), "google_storage_bucket") && !contains(keys(v.resources), "google_cloud_run_v2_service")
+  }
+
+  # Group path rules by origin type for routing
+  cloud_run_path_rules = {
+    for i, entry in local.origin_paths : "${entry.origin_name}-${i}" => entry
+    if contains(keys(entry.resources), "google_cloud_run_v2_service")
+  }
+
+  cloud_storage_path_rules = {
+    for i, entry in local.origin_paths : "${entry.origin_name}-${i}" => entry
+    if contains(keys(entry.resources), "google_storage_bucket")
+  }
+
+  other_path_rules = {
+    for i, entry in local.origin_paths : "${entry.origin_name}-${i}" => entry
+    if !contains(keys(entry.resources), "google_storage_bucket") && !contains(keys(entry.resources), "google_cloud_run_v2_service")
   }
 }
 
@@ -169,12 +201,12 @@ resource "google_compute_url_map" "https_url_map" {
     default_service = local.default_origin_backend_service
 
     dynamic "path_rule" {
-      for_each = local.cloud_run_origins
+      for_each = local.cloud_run_path_rules
 
       content {
-        service = google_compute_backend_service.service_backends[path_rule.key].self_link
+        service = google_compute_backend_service.service_backends[path_rule.value.origin_name].self_link
         paths = [
-          // The route path provided by the user may or may not start with a slash but will always end with a slash. 
+          // The route path provided by the user may or may not start with a slash but will always end with a slash.
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
@@ -190,12 +222,12 @@ resource "google_compute_url_map" "https_url_map" {
     }
 
     dynamic "path_rule" {
-      for_each = local.cloud_storage_origins
+      for_each = local.cloud_storage_path_rules
 
       content {
-        service = google_compute_backend_bucket.bucket_backends[path_rule.key].self_link
+        service = google_compute_backend_bucket.bucket_backends[path_rule.value.origin_name].self_link
         paths = [
-          // The route path provided by the user may or may not start with a slash but will always end with a slash. 
+          // The route path provided by the user may or may not start with a slash but will always end with a slash.
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
@@ -210,12 +242,12 @@ resource "google_compute_url_map" "https_url_map" {
     }
 
     dynamic "path_rule" {
-      for_each = local.other_origins
+      for_each = local.other_path_rules
 
       content {
-        service = google_compute_backend_service.external_backends[path_rule.key].self_link
+        service = google_compute_backend_service.external_backends[path_rule.value.origin_name].self_link
         paths = [
-          // The route path provided by the user may or may not start with a slash but will always end with a slash. 
+          // The route path provided by the user may or may not start with a slash but will always end with a slash.
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
