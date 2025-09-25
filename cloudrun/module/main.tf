@@ -89,6 +89,8 @@ resource "google_cloud_run_v2_service" "service" {
   deletion_protection = false
 
   template {
+    max_instance_request_concurrency = var.container_concurrency
+
     scaling {
       min_instance_count = var.min_instances
       max_instance_count = var.max_instances
@@ -97,10 +99,13 @@ resource "google_cloud_run_v2_service" "service" {
     containers {
       image = "${local.service_image_url}@${docker_registry_image.push.sha256_digest}"
       resources {
-        limits = {
-          cpu    = var.cpus
-          memory = "${var.memory_mb}Mi"
-        }
+        limits = merge(
+          {
+            cpu    = var.cpus
+            memory = "${var.memory_mb}Mi"
+          },
+          var.gpus > 0 ? { "nvidia.com/gpu" = var.gpus } : {}
+        )
       }
 
       ports {
