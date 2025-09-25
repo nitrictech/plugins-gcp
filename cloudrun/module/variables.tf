@@ -11,9 +11,9 @@ variable "suga" {
 }
 
 variable "environment_variables" {
-    type = map(string)
-    description = "Environment variables to set on the lambda function"
-    default     = {}
+  type        = map(string)
+  description = "Environment variables to set on the lambda function"
+  default     = {}
 }
 # TODO: review defaults
 variable "memory_mb" {
@@ -75,7 +75,7 @@ variable "container_port" {
 }
 
 variable "ingress" {
-    description = "The ingress for this Service. Possible values are INGRESS_TRAFFIC_ALL, INGRESS_TRAFFIC_INTERNAL_ONLY, or INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
-    type = string
-    default = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  description = "The ingress for this Service. Possible values are INGRESS_TRAFFIC_ALL, INGRESS_TRAFFIC_INTERNAL_ONLY, or INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  type        = string
+  default     = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 }

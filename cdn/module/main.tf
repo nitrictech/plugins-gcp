@@ -63,7 +63,6 @@ locals {
   }
 }
 
-
 # Enable the required services
 resource "google_project_service" "required_services" {
   for_each = toset(local.required_services)
@@ -265,7 +264,7 @@ resource "google_compute_url_map" "https_url_map" {
 
 # Lookup the Managed Zone for the CDN Domain
 data "google_dns_managed_zone" "cdn_zone" {
-  name = var.dns_zone_name
+  name    = var.dns_zone_name
   project = var.project_id
 
   depends_on = [google_project_service.required_services]
@@ -277,8 +276,8 @@ resource "google_dns_record_set" "cdn_dns_record" {
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl = var.domain_ttl
-  project = var.project_id
+  ttl          = var.domain_ttl
+  project      = var.project_id
 }
 
 resource "google_dns_record_set" "www_cdn_dns_record" {
@@ -286,8 +285,8 @@ resource "google_dns_record_set" "www_cdn_dns_record" {
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl = var.domain_ttl
-  project = var.project_id
+  ttl          = var.domain_ttl
+  project      = var.project_id
 }
 
 resource "google_certificate_manager_certificate" "cdn_cert" {
