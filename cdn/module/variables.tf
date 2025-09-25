@@ -3,12 +3,12 @@ variable "suga" {
     name     = string
     stack_id = string
     origins = map(object({
-      path = string
-      base_path = string
-      type = string
+      path        = string
+      base_path   = string
+      type        = string
       domain_name = string
-      id = string
-      resources = map(string)
+      id          = string
+      resources   = map(string)
     }))
   })
 }

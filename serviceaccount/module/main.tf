@@ -12,7 +12,7 @@ resource "google_project_service" "required_services" {
   service = each.key
   project = var.project_id
   # Leave API enabled on destroy
-  disable_on_destroy = false
+  disable_on_destroy         = false
   disable_dependent_services = false
 }
 
@@ -27,5 +27,5 @@ resource "google_service_account" "service_account" {
   display_name = "${var.suga.name} service account"
   description  = "Service account which runs the ${var.suga.name}"
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }

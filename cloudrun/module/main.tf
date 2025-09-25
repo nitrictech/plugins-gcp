@@ -22,7 +22,7 @@ resource "google_project_service" "required_services" {
   service = each.key
   project = var.project_id
   # Leave API enabled on destroy
-  disable_on_destroy = false
+  disable_on_destroy         = false
   disable_dependent_services = false
 }
 
@@ -33,12 +33,12 @@ resource "google_artifact_registry_repository" "service-image-repo" {
   description   = "service images for suga stack ${var.suga.name}"
   format        = "DOCKER"
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 locals {
   artifact_registry_url = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.service-image-repo.name}"
-  service_image_url = "${local.artifact_registry_url}/${var.suga.name}"
+  service_image_url     = "${local.artifact_registry_url}/${var.suga.name}"
 }
 
 # Tag the provided docker image with the repository url
@@ -81,10 +81,10 @@ resource "random_password" "event_token" {
 resource "google_cloud_run_v2_service" "service" {
   name = replace(var.suga.name, "_", "-")
 
-  location = var.region
-  project  = var.project_id
-  launch_stage        = "GA"
-  ingress = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  location     = var.region
+  project      = var.project_id
+  launch_stage = "GA"
+  ingress      = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   deletion_protection = false
 
@@ -93,7 +93,7 @@ resource "google_cloud_run_v2_service" "service" {
       min_instance_count = var.min_instances
       max_instance_count = var.max_instances
     }
-    
+
     containers {
       image = "${local.service_image_url}@${docker_registry_image.push.sha256_digest}"
       resources {
@@ -108,7 +108,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
 
       env {
-        name = "SUGA_GUEST_PORT"
+        name  = "SUGA_GUEST_PORT"
         value = 8080
       }
 
