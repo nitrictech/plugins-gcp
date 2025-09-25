@@ -12,7 +12,7 @@ runtime:
   go_module: github.com/nitrictech/plugins/gcp/cloudrun
 
 inputs:
-  environment:
+  environment_variables:
     type: map(string)
     description: 'Cloud Run service environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`)'
   memory_mb:

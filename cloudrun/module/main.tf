@@ -130,7 +130,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
 
       dynamic "env" {
-        for_each = merge(var.environment, var.suga.env)
+        for_each = merge(var.environment_variables, var.suga.env)
         content {
           name  = env.key
           value = env.value

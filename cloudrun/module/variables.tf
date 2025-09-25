@@ -10,10 +10,10 @@ variable "suga" {
   })
 }
 
-variable "environment" {
-  type        = map(string)
-  description = "Environment variables to set on the lambda function"
-  default     = {}
+variable "environment_variables" {
+    type = map(string)
+    description = "Environment variables to set on the lambda function"
+    default     = {}
 }
 # TODO: review defaults
 variable "memory_mb" {
