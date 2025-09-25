@@ -39,15 +39,15 @@ resource "google_project_service" "required_services" {
   service = each.key
   project = var.project_id
   # Leave API enabled on destroy
-  disable_on_destroy = false
+  disable_on_destroy         = false
   disable_dependent_services = false
 }
 
 resource "random_string" "cdn_prefix" {
   length  = 8
   special = false
-  lower = true
-  upper = false
+  lower   = true
+  upper   = false
 }
 
 # Create Network Endpoint Groups for services
@@ -63,7 +63,7 @@ resource "google_compute_region_network_endpoint_group" "service_negs" {
     service = each.value.id
   }
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 # Create Backend Services for services
@@ -72,9 +72,9 @@ resource "google_compute_backend_service" "service_backends" {
 
   project = var.project_id
 
-  name     = "${provider::corefunc::str_kebab(each.key)}-service-bs"
-  protocol = "HTTPS"
-  enable_cdn  = false
+  name       = "${provider::corefunc::str_kebab(each.key)}-service-bs"
+  protocol   = "HTTPS"
+  enable_cdn = false
 
   backend {
     group = google_compute_region_network_endpoint_group.service_negs[each.key].self_link
@@ -83,7 +83,7 @@ resource "google_compute_backend_service" "service_backends" {
 
 # Create a Global IP Address for the CDN
 resource "google_compute_global_address" "cdn_ip" {
-  name = "cdn-ip-${random_string.cdn_prefix.result}"
+  name    = "cdn-ip-${random_string.cdn_prefix.result}"
   project = var.project_id
 }
 
@@ -120,14 +120,14 @@ resource "google_compute_region_network_endpoint_group" "external_negs" {
 
   name                  = "${each.key}-external-neg"
   network_endpoint_type = "INTERNET_FQDN_PORT"
-  region = var.region
+  region                = var.region
 
   connection {
     host = each.value.domain_name
     port = 443
   }
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 resource "google_compute_backend_service" "external_backends" {
@@ -135,9 +135,9 @@ resource "google_compute_backend_service" "external_backends" {
 
   project = var.project_id
 
-  name     = "${provider::corefunc::str_kebab(each.key)}-external-bs"
-  protocol = "HTTPS"
-  enable_cdn  = false
+  name       = "${provider::corefunc::str_kebab(each.key)}-external-bs"
+  protocol   = "HTTPS"
+  enable_cdn = false
 
   backend {
     group = google_compute_region_network_endpoint_group.external_negs[each.key].self_link
@@ -146,17 +146,17 @@ resource "google_compute_backend_service" "external_backends" {
 
 locals {
   // Return correct backend_service depending on type of the default origin
-  default_origin_backend_service = (contains(keys(local.cloud_storage_origins), local.default_origin) ? 
-    google_compute_backend_bucket.bucket_backends[local.default_origin].self_link : 
-    (contains(keys(local.cloud_run_origins), local.default_origin) ? 
-      google_compute_backend_service.service_backends[local.default_origin].self_link : 
-      google_compute_backend_service.external_backends[local.default_origin].self_link))
+  default_origin_backend_service = (contains(keys(local.cloud_storage_origins), local.default_origin) ?
+    google_compute_backend_bucket.bucket_backends[local.default_origin].self_link :
+    (contains(keys(local.cloud_run_origins), local.default_origin) ?
+      google_compute_backend_service.service_backends[local.default_origin].self_link :
+  google_compute_backend_service.external_backends[local.default_origin].self_link))
 }
 
 # Create a URL Map for routing requests
 resource "google_compute_url_map" "https_url_map" {
   name            = "https-site-url-map-${random_string.cdn_prefix.result}"
-  project = var.project_id
+  project         = var.project_id
   default_service = local.default_origin_backend_service
 
   host_rule {
@@ -173,13 +173,13 @@ resource "google_compute_url_map" "https_url_map" {
 
       content {
         service = google_compute_backend_service.service_backends[path_rule.key].self_link
-        paths   = [
+        paths = [
           // The route path provided by the user may or may not start with a slash but will always end with a slash. 
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
-          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}" // Ensure /${path}/
+          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
         ]
-        
+
         route_action {
           url_rewrite {
             path_prefix_rewrite = "/"
@@ -194,13 +194,13 @@ resource "google_compute_url_map" "https_url_map" {
 
       content {
         service = google_compute_backend_bucket.bucket_backends[path_rule.key].self_link
-        paths   = [
+        paths = [
           // The route path provided by the user may or may not start with a slash but will always end with a slash. 
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
-          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}" // Ensure /${path}/
+          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
         ]
-        
+
         route_action {
           url_rewrite {
             path_prefix_rewrite = "/"
@@ -214,13 +214,13 @@ resource "google_compute_url_map" "https_url_map" {
 
       content {
         service = google_compute_backend_service.external_backends[path_rule.key].self_link
-        paths   = [
+        paths = [
           // The route path provided by the user may or may not start with a slash but will always end with a slash. 
           // Ensure /${path}/* and /${path}/ are both supported regardless of what the base path is.
           startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}*" : "/${path_rule.value.base_path}${path_rule.value.path}*", // Ensure /${path}/*
-          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}" // Ensure /${path}/
+          startswith("${path_rule.value.base_path}${path_rule.value.path}", "/") ? "${path_rule.value.base_path}${path_rule.value.path}" : "/${path_rule.value.base_path}${path_rule.value.path}"    // Ensure /${path}/
         ]
-        
+
         route_action {
           url_rewrite {
             path_prefix_rewrite = "/"
@@ -233,10 +233,10 @@ resource "google_compute_url_map" "https_url_map" {
 
 # Lookup the Managed Zone for the CDN Domain
 data "google_dns_managed_zone" "cdn_zone" {
-  name = var.cdn_domain.zone_name
+  name    = var.cdn_domain.zone_name
   project = var.project_id
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 # Create DNS Records for the CDN
@@ -245,8 +245,8 @@ resource "google_dns_record_set" "cdn_dns_record" {
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl = var.cdn_domain.domain_ttl
-  project = var.project_id
+  ttl          = var.cdn_domain.domain_ttl
+  project      = var.project_id
 }
 
 resource "google_dns_record_set" "www_cdn_dns_record" {
@@ -254,8 +254,8 @@ resource "google_dns_record_set" "www_cdn_dns_record" {
   managed_zone = data.google_dns_managed_zone.cdn_zone.name
   type         = "A"
   rrdatas      = [google_compute_global_address.cdn_ip.address]
-  ttl = var.cdn_domain.domain_ttl
-  project = var.project_id
+  ttl          = var.cdn_domain.domain_ttl
+  project      = var.project_id
 }
 
 resource "google_certificate_manager_certificate" "cdn_cert" {
@@ -268,7 +268,7 @@ resource "google_certificate_manager_certificate" "cdn_cert" {
     domains = [var.cdn_domain.domain_name]
   }
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 resource "google_certificate_manager_certificate_map" "cdn_cert_map" {
@@ -276,24 +276,24 @@ resource "google_certificate_manager_certificate_map" "cdn_cert_map" {
   name        = "cert-map-${random_string.cdn_prefix.result}"
   description = "CDN Certificate Map"
 
-  depends_on = [ google_project_service.required_services ]
+  depends_on = [google_project_service.required_services]
 }
 
 resource "google_certificate_manager_certificate_map_entry" "cdn_cert_map_entry" {
-  name        = "cdn-cert-map-entry-${random_string.cdn_prefix.result}"
-  description = "CDN Certificate Map Entry"
-  map = google_certificate_manager_certificate_map.cdn_cert_map.name 
+  name         = "cdn-cert-map-entry-${random_string.cdn_prefix.result}"
+  description  = "CDN Certificate Map Entry"
+  map          = google_certificate_manager_certificate_map.cdn_cert_map.name
   certificates = [google_certificate_manager_certificate.cdn_cert.id]
-  matcher = "PRIMARY"
-  project = var.project_id
+  matcher      = "PRIMARY"
+  project      = var.project_id
 }
 
 # Create a Target HTTPS Proxy
 resource "google_compute_target_https_proxy" "https_proxy" {
-  name             = "https-proxy-${random_string.cdn_prefix.result}"
+  name            = "https-proxy-${random_string.cdn_prefix.result}"
   certificate_map = "//certificatemanager.googleapis.com/${google_certificate_manager_certificate_map.cdn_cert_map.id}"
-  url_map          = google_compute_url_map.https_url_map.self_link
-  project = var.project_id
+  url_map         = google_compute_url_map.https_url_map.self_link
+  project         = var.project_id
 }
 
 # Create a Global Forwarding Rule
@@ -303,5 +303,5 @@ resource "google_compute_global_forwarding_rule" "https_forwarding_rule" {
   ip_protocol = "TCP"
   port_range  = "443"
   target      = google_compute_target_https_proxy.https_proxy.self_link
-  project = var.project_id
+  project     = var.project_id
 }

@@ -1,12 +1,12 @@
 variable "suga" {
   type = object({
-    name = string
+    name     = string
     stack_id = string
   })
 }
 
 variable "trusted_actions" {
-  type    = list(string)
+  type = list(string)
   default = [
     "monitoring.timeSeries.create",
     "resourcemanager.projects.get",
