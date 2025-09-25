@@ -10,7 +10,7 @@ variable "suga" {
   })
 }
 
-variable "environment" {
+variable "environment_variables" {
   type        = map(string)
   description = "Environment variables to set on the lambda function"
   default     = {}
@@ -72,4 +72,10 @@ variable "container_port" {
   description = "The port to expose the CloudRun service to"
   type        = number
   default     = 9001
+}
+
+variable "ingress" {
+  description = "The ingress for this Service. Possible values are INGRESS_TRAFFIC_ALL, INGRESS_TRAFFIC_INTERNAL_ONLY, or INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  type        = string
+  default     = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 }

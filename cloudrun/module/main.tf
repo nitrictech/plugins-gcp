@@ -84,11 +84,13 @@ resource "google_cloud_run_v2_service" "service" {
   location     = var.region
   project      = var.project_id
   launch_stage = "GA"
-  ingress      = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  ingress      = var.ingress
 
   deletion_protection = false
 
   template {
+    max_instance_request_concurrency = var.container_concurrency
+
     scaling {
       min_instance_count = var.min_instances
       max_instance_count = var.max_instances
@@ -97,10 +99,13 @@ resource "google_cloud_run_v2_service" "service" {
     containers {
       image = "${local.service_image_url}@${docker_registry_image.push.sha256_digest}"
       resources {
-        limits = {
-          cpu    = var.cpus
-          memory = "${var.memory_mb}Mi"
-        }
+        limits = merge(
+          {
+            cpu    = var.cpus
+            memory = "${var.memory_mb}Mi"
+          },
+          var.gpus > 0 ? { "nvidia.com/gpu" = var.gpus } : {}
+        )
       }
 
       ports {
@@ -130,7 +135,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
 
       dynamic "env" {
-        for_each = merge(var.environment, var.suga.env)
+        for_each = merge(var.environment_variables, var.suga.env)
         content {
           name  = env.key
           value = env.value
