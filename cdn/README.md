@@ -14,18 +14,18 @@ This plugin provisions a complete CDN solution using Google Cloud CDN with:
 
 ## Required Inputs
 
-| Parameter       | Type   | Description                                         |
-| --------------- | ------ | --------------------------------------------------- |
-| `project_id`    | string | Google Cloud Project ID (e.g. `my-project-123`)     |
-| `region`        | string | Google Cloud region (e.g. `us-central1`)            |
-| `domain_name`   | string | Domain name for the CDN (A records will be created) |
-| `dns_zone_name` | string | Name of the existing Cloud DNS zone                 |
+| Parameter       | Type   | Description                                                                                                                                     |
+| --------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `project_id`    | string | Google Cloud Project ID (e.g. `my-project-123`)                                                                                                 |
+| `region`        | string | Google Cloud region (e.g. `us-central1`)                                                                                                        |
+| `domain_name`   | string | Domain name for the CDN (A records will be created)                                                                                             |
+| `dns_zone_name` | string | Name of the existing [Cloud DNS](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/dns_managed_zone#dns_name-2) |
 
 ## Optional Inputs
 
-| Parameter    | Type   | Description                                     |
-| ------------ | ------ | ----------------------------------------------- |
-| `domain_ttl` | number | TTL for DNS A records in seconds (default: 300) |
+| Parameter    | Type   | Description                      | Default |
+| ------------ | ------ | -------------------------------- | ------- |
+| `domain_ttl` | number | TTL for DNS A records in seconds | `300`   |
 
 ## Prerequisites
 

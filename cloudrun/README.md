@@ -5,6 +5,7 @@ Deploys containerized applications to Google Cloud Run with automatic scaling, t
 ## Overview
 
 This plugin provisions Cloud Run services with:
+
 - Automatic scaling based on traffic
 - Configurable CPU, memory, and concurrency limits
 - Environment variable management
@@ -14,25 +15,25 @@ This plugin provisions Cloud Run services with:
 
 ## Required Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `project_id` | string | Google Cloud Project ID (e.g. `my-project-123`) |
-| `region` | string | Google Cloud region for service deployment (e.g. `us-central1`) |
+| Parameter    | Type   | Description                                                     |
+| ------------ | ------ | --------------------------------------------------------------- |
+| `project_id` | string | Google Cloud Project ID (e.g. `my-project-123`)                 |
+| `region`     | string | Google Cloud region for service deployment (e.g. `us-central1`) |
 
 ## Optional Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `environment` | map(string) | Environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`) |
-| `memory_mb` | number | Memory allocation in MB (e.g. `512`) |
-| `cpus` | number | CPU allocation (e.g. `1`) |
-| `gpus` | number | GPU allocation (e.g. `0`) |
-| `min_instances` | number | Minimum instances to keep running (e.g. `0`) |
-| `max_instances` | number | Maximum instances that can be created (e.g. `10`) |
-| `container_concurrency` | number | Maximum concurrent requests per instance (e.g. `80`) |
-| `timeout_seconds` | number | Maximum request timeout in seconds (e.g. `10`) |
-| `container_port` | number | Container port number (e.g. `9001`) |
-| `ingress` | string | Traffic ingress setting (`INGRESS_TRAFFIC_ALL`, `INGRESS_TRAFFIC_INTERNAL_ONLY`, `INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER`) |
+| Parameter               | Type        | Description                                                                                                                                 | Default                                  |
+| ----------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `environment`           | map(string) | Environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`)                                                              | `{}`                                     |
+| `memory_mb`             | number      | Memory allocation in MB                                                                                                                     | `512`                                    |
+| `cpus`                  | number      | CPU allocation                                                                                                                              | `1`                                      |
+| `gpus`                  | number      | GPU allocation                                                                                                                              | `0`                                      |
+| `min_instances`         | number      | Minimum instances to keep running                                                                                                           | `0`                                      |
+| `max_instances`         | number      | Maximum instances that can be created                                                                                                       | `10`                                     |
+| `container_concurrency` | number      | Maximum concurrent requests per instance                                                                                                    | `80`                                     |
+| `timeout_seconds`       | number      | Maximum request timeout in seconds                                                                                                          | `10`                                     |
+| `container_port`        | number      | Container port number                                                                                                                       | `9001`                                   |
+| `ingress`               | string      | Traffic ingress setting. Must be one of `INGRESS_TRAFFIC_ALL`, `INGRESS_TRAFFIC_INTERNAL_ONLY`, or `INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER` | `INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER` |
 
 ## Prerequisites
 

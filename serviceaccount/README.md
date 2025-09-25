@@ -5,6 +5,7 @@ Creates and manages Google Cloud IAM service accounts with customizable permissi
 ## Overview
 
 This plugin provisions IAM service accounts with:
+
 - Fine-grained permission management via trusted actions
 - Automatic key generation and rotation support
 - Integration with other GCP services
@@ -13,15 +14,15 @@ This plugin provisions IAM service accounts with:
 
 ## Required Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `project_id` | string | Google Cloud Project ID (e.g. `my-project-123`) |
+| Parameter    | Type   | Description             |
+| ------------ | ------ | ----------------------- |
+| `project_id` | string | Google Cloud Project ID |
 
 ## Optional Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `trusted_actions` | list(string) | IAM actions/roles this service account can perform (e.g. `["storage.objects.get", "storage.objects.create", "cloudsql.instances.connect"]`) |
+| Parameter         | Type         | Description                                                                                                                                 | Default                                                            |
+| ----------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `trusted_actions` | list(string) | IAM actions/roles this service account can perform (e.g. `["storage.objects.get", "storage.objects.create", "cloudsql.instances.connect"]`) | `["monitoring.timeSeries.create", "resourcemanager.projects.get"]` |
 
 ## Prerequisites
 
@@ -33,6 +34,7 @@ This plugin provisions IAM service accounts with:
 **Note:** This example shows platform file syntax. You can configure this plugin directly in the Suga Platform Builder UI without writing YAML.
 
 ### Basic Storage Access
+
 ```yaml
 services:
   storage-worker:
@@ -48,6 +50,7 @@ services:
 ```
 
 ### Full Storage and Cloud SQL Access
+
 ```yaml
 services:
   backend:
@@ -63,6 +66,7 @@ services:
 ```
 
 ### Read-Only Monitoring Access
+
 ```yaml
 services:
   monitoring:
@@ -78,14 +82,14 @@ services:
 
 ## Common IAM Actions
 
-| Action/Role | Description |
-|-------------|-------------|
-| `storage.objects.get` | Read objects from Cloud Storage |
-| `storage.objects.create` | Create objects in Cloud Storage |
-| `roles/storage.admin` | Full Storage access |
-| `roles/cloudsql.client` | Connect to Cloud SQL instances |
-| `secretmanager.versions.access` | Access Secret Manager secrets |
-| `roles/monitoring.viewer` | View monitoring data |
+| Action/Role                     | Description                     |
+| ------------------------------- | ------------------------------- |
+| `storage.objects.get`           | Read objects from Cloud Storage |
+| `storage.objects.create`        | Create objects in Cloud Storage |
+| `roles/storage.admin`           | Full Storage access             |
+| `roles/cloudsql.client`         | Connect to Cloud SQL instances  |
+| `secretmanager.versions.access` | Access Secret Manager secrets   |
+| `roles/monitoring.viewer`       | View monitoring data            |
 
 ## Security Best Practices
 

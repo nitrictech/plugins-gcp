@@ -5,6 +5,7 @@ Provisions Google Cloud Storage buckets with configurable storage classes, acces
 ## Overview
 
 This plugin creates Cloud Storage buckets with:
+
 - Multiple storage class options for cost optimization
 - Configurable access controls and permissions
 - Automatic file upload from local directories
@@ -14,25 +15,25 @@ This plugin creates Cloud Storage buckets with:
 
 ## Required Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `project_id` | string | Google Cloud Project ID (e.g. `my-project-123`) |
-| `region` | string | Google Cloud region for storage bucket (e.g. `us-central1`) |
+| Parameter    | Type   | Description                                                 |
+| ------------ | ------ | ----------------------------------------------------------- |
+| `project_id` | string | Google Cloud Project ID (e.g. `my-project-123`)             |
+| `region`     | string | Google Cloud region for storage bucket (e.g. `us-central1`) |
 
 ## Optional Inputs
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `storage_class` | string | Performance and durability tier for bucket objects (default: `STANDARD`) |
+| Parameter       | Type   | Description                                        | Default    |
+| --------------- | ------ | -------------------------------------------------- | ---------- |
+| `storage_class` | string | Performance and durability tier for bucket objects | `STANDARD` |
 
 ## Storage Classes
 
-| Class | Use Case | Access Frequency | Min Storage Duration |
-|-------|----------|------------------|---------------------|
-| `STANDARD` | Frequently accessed data | Daily/weekly | None |
-| `NEARLINE` | Infrequently accessed data | Monthly | 30 days |
-| `COLDLINE` | Rarely accessed data | Quarterly | 90 days |
-| `ARCHIVE` | Long-term archival | Yearly | 365 days |
+| Class      | Use Case                   | Access Frequency | Min Storage Duration |
+| ---------- | -------------------------- | ---------------- | -------------------- |
+| `STANDARD` | Frequently accessed data   | Daily/weekly     | None                 |
+| `NEARLINE` | Infrequently accessed data | Monthly          | 30 days              |
+| `COLDLINE` | Rarely accessed data       | Quarterly        | 90 days              |
+| `ARCHIVE`  | Long-term archival         | Yearly           | 365 days             |
 
 ## Prerequisites
 
@@ -44,6 +45,7 @@ This plugin creates Cloud Storage buckets with:
 **Note:** This example shows platform file syntax. You can configure this plugin directly in the Suga Platform Builder UI without writing YAML.
 
 ### Standard Storage for Frequent Access
+
 ```yaml
 buckets:
   uploads:
@@ -55,6 +57,7 @@ buckets:
 ```
 
 ### Archive Storage for Long-term Backup
+
 ```yaml
 buckets:
   backups:
@@ -66,6 +69,7 @@ buckets:
 ```
 
 ### Nearline Storage for Monthly Reports
+
 ```yaml
 buckets:
   reports:
