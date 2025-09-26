@@ -1,4 +1,4 @@
-name: gcp-service-account
+name: service-account
 display_name: Service Account
 type: identity
 description: "Creates service accounts for GCP resource authentication"

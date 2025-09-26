@@ -1,4 +1,4 @@
-name: gcp-cloudrun
+name: cloudrun
 display_name: Cloud Run
 type: service
 description: "Deploys Cloud Run services with auto-scaling and service accounts"

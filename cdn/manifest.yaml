@@ -1,4 +1,4 @@
-name: gcp-cdn
+name: cdn
 display_name: CDN
 type: entrypoint
 description: "Creates Cloud CDN with load balancing and SSL certificates"
