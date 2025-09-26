@@ -127,7 +127,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
       env {
         name  = "SERVICE_ACCOUNT_EMAIL"
-        value = var.suga.identities["gcp:iam:role"].exports["gcp_service_account:email"]
+        value = var.suga.identities["gcp:iam:service_account"].exports["gcp_service_account:email"]
       }
       env {
         name  = "GCP_REGION"
@@ -143,7 +143,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
     }
 
-    service_account = var.suga.identities["gcp:iam:role"].exports["gcp_service_account:email"]
+    service_account = var.suga.identities["gcp:iam:service_account"].exports["gcp_service_account:email"]
     timeout         = "${var.timeout_seconds}s"
   }
 
