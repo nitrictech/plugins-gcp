@@ -1,4 +1,4 @@
-module github.com/nitrictech/plugins/gcp
+module github.com/nitrictech/plugins-gcp
 
 go 1.24.4
 
