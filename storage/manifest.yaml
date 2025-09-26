@@ -6,7 +6,7 @@ icon: ./icon.svg
 deployment:
   terraform: ./module
 runtime:
-  go_module: github.com/nitrictech/plugins/gcp/storage
+  go_module: github.com/nitrictech/plugins-gcp/storage
 
 inputs:
   project_id:

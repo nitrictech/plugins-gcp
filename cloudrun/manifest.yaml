@@ -9,7 +9,7 @@ deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
   terraform: ./module
 runtime:
-  go_module: github.com/nitrictech/plugins/gcp/cloudrun
+  go_module: github.com/nitrictech/plugins-gcp/cloudrun
 
 inputs:
   environment_variables:
