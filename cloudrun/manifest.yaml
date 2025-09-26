@@ -1,4 +1,4 @@
-name: gcp-cloudrun
+name: cloudrun
 display_name: Cloud Run
 type: service
 description: "Deploys Cloud Run services with auto-scaling and service accounts"
@@ -9,7 +9,7 @@ deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
   terraform: ./module
 runtime:
-  go_module: github.com/nitrictech/plugins/gcp/cloudrun
+  go_module: github.com/nitrictech/plugins-gcp/cloudrun
 
 inputs:
   environment_variables:

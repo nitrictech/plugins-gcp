@@ -1,11 +1,12 @@
-name: gcp-storage-bucket
+name: storage-bucket
+display_name: Storage
 type: storage
 description: "Provisions GCS buckets with custom access controls and automatic file upload"
 icon: ./icon.svg
 deployment:
   terraform: ./module
 runtime:
-  go_module: github.com/nitrictech/plugins/gcp/storage
+  go_module: github.com/nitrictech/plugins-gcp/storage
 
 inputs:
   project_id:

@@ -38,9 +38,9 @@ This plugin provisions IAM service accounts with:
 ```yaml
 services:
   storage-worker:
-    plugin: "gcp-cloudrun"
+    plugin: "cloudrun"
     identities:
-      - plugin: "gcp-service-account"
+      - plugin: "service-account"
         properties:
           project_id: "my-project-123"
           trusted_actions:
@@ -54,9 +54,9 @@ services:
 ```yaml
 services:
   backend:
-    plugin: "gcp-cloudrun"
+    plugin: "cloudrun"
     identities:
-      - plugin: "gcp-service-account"
+      - plugin: "service-account"
         properties:
           project_id: "my-project-123"
           trusted_actions:
@@ -70,9 +70,9 @@ services:
 ```yaml
 services:
   monitoring:
-    plugin: "gcp-cloudrun"
+    plugin: "cloudrun"
     identities:
-      - plugin: "gcp-service-account"
+      - plugin: "service-account"
         properties:
           project_id: "my-project-123"
           trusted_actions:

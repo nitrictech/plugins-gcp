@@ -49,7 +49,7 @@ This plugin creates Cloud Storage buckets with:
 ```yaml
 buckets:
   uploads:
-    plugin: "gcp-storage-bucket"
+    plugin: "storage-bucket"
     properties:
       project_id: "my-project-123"
       region: "us-central1"
@@ -61,7 +61,7 @@ buckets:
 ```yaml
 buckets:
   backups:
-    plugin: "gcp-storage-bucket"
+    plugin: "storage-bucket"
     properties:
       project_id: "my-project-123"
       region: "us-central1"
@@ -73,7 +73,7 @@ buckets:
 ```yaml
 buckets:
   reports:
-    plugin: "gcp-storage-bucket"
+    plugin: "storage-bucket"
     properties:
       project_id: "my-project-123"
       region: "us-central1"

@@ -39,7 +39,7 @@ This plugin provisions a complete CDN solution using Google Cloud CDN with:
 ```yaml
 entrypoints:
   default:
-    plugin: "gcp-cdn"
+    plugin: "cdn"
     properties:
       project_id: "my-project-123"
       region: "us-central1"

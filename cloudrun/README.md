@@ -38,7 +38,7 @@ This plugin provisions Cloud Run services with:
 ## Prerequisites
 
 - Container image pushed to Google Container Registry or Artifact Registry
-- Service account with appropriate IAM permissions (managed by `gcp-service-account` plugin)
+- Service account with appropriate IAM permissions (managed by `service-account` plugin)
 
 ## Usage Example
 
@@ -47,9 +47,9 @@ This plugin provisions Cloud Run services with:
 ```yaml
 services:
   api:
-    plugin: "gcp-cloudrun"
+    plugin: "cloudrun"
     identities:
-      - plugin: "gcp-service-account"
+      - plugin: "service-account"
     properties:
       project_id: "my-project-123"
       region: "us-central1"
