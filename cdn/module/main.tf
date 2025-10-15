@@ -327,12 +327,39 @@ resource "google_compute_target_https_proxy" "https_proxy" {
   project         = var.project_id
 }
 
-# Create a Global Forwarding Rule
+# Create a Global Forwarding Rule for HTTPS
 resource "google_compute_global_forwarding_rule" "https_forwarding_rule" {
   name        = "https-forwarding-rule-${random_string.cdn_prefix.result}"
   ip_address  = google_compute_global_address.cdn_ip.address
   ip_protocol = "TCP"
   port_range  = "443"
   target      = google_compute_target_https_proxy.https_proxy.self_link
+  project     = var.project_id
+}
+
+# HTTP to HTTPS Redirect Configuration
+resource "google_compute_url_map" "http_redirect" {
+  name    = "http-redirect-url-map-${random_string.cdn_prefix.result}"
+  project = var.project_id
+
+  default_url_redirect {
+    https_redirect         = true
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    strip_query            = false
+  }
+}
+
+resource "google_compute_target_http_proxy" "http_redirect_proxy" {
+  name    = "http-redirect-proxy-${random_string.cdn_prefix.result}"
+  url_map = google_compute_url_map.http_redirect.self_link
+  project = var.project_id
+}
+
+resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
+  name        = "http-forwarding-rule-${random_string.cdn_prefix.result}"
+  ip_address  = google_compute_global_address.cdn_ip.address
+  ip_protocol = "TCP"
+  port_range  = "80"
+  target      = google_compute_target_http_proxy.http_redirect_proxy.self_link
   project     = var.project_id
 }
