@@ -22,6 +22,12 @@ variable "memory_mb" {
   default     = 512
 }
 
+variable "cpu_idle" {
+  description = "Determines whether CPU is only allocated during requests"
+  type        = bool
+  default     = true
+}
+
 variable "cpus" {
   description = "The amount of cpus to allocate to the CloudRun service"
   type        = number

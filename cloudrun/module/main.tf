@@ -99,6 +99,7 @@ resource "google_cloud_run_v2_service" "service" {
     containers {
       image = "${local.service_image_url}@${docker_registry_image.push.sha256_digest}"
       resources {
+        cpu_idle = var.cpu_idle
         limits = merge(
           {
             cpu    = var.cpus
