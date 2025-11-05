@@ -158,11 +158,14 @@ resource "random_string" "service_id" {
   upper   = false
 }
 
-# Give all users permissions to execute the CloudRun service (is ingress only)
-resource "google_cloud_run_service_iam_member" "invoker" {
+# Grant service-to-service invoker permissions
+# Each service that needs to invoke this service gets the run.invoker role
+resource "google_cloud_run_service_iam_member" "service_invokers" {
+  for_each = var.suga.services
+
   project  = var.project_id
   service  = google_cloud_run_v2_service.service.name
   location = google_cloud_run_v2_service.service.location
   role     = "roles/run.invoker"
-  member   = "allUsers"
+  member   = "serviceAccount:${each.value.identities["gcp:iam:service_account"].exports["gcp_service_account:email"]}"
 }
