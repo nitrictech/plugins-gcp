@@ -86,7 +86,7 @@ resource "google_compute_region_network_endpoint_group" "service_negs" {
   for_each = local.cloud_run_origins
   provider = google-beta
 
-  name                  = "${each.key}-service-neg"
+  name                  = "${provider::corefunc::str_kebab(each.key)}-service-neg"
   region                = var.region
   network_endpoint_type = "SERVERLESS"
 
@@ -149,7 +149,7 @@ resource "google_compute_region_network_endpoint_group" "external_negs" {
   for_each = local.other_origins
   provider = google-beta
 
-  name                  = "${each.key}-external-neg"
+  name                  = "${provider::corefunc::str_kebab(each.key)}-external-neg"
   network_endpoint_type = "INTERNET_FQDN_PORT"
   region                = var.region
 
